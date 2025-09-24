@@ -5,7 +5,8 @@ import matplotlib.cm as cm
 import numpy as np
 
 st.set_page_config(layout="wide")
-st.title("TOPFit Workout Vizualizace")
+st.title("Vizualizace posilování")
+st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
 
 df = pd.read_csv("topfit_rozdel_cviceni.csv")
 df["week"] = pd.to_datetime(df["date"]).dt.isocalendar().week.astype(int)
