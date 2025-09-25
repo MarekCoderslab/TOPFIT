@@ -11,58 +11,26 @@ st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
 df = pd.read_csv("topfit_rozdel_cviceni.csv")
 df["week"] = pd.to_datetime(df["date"]).dt.isocalendar().week.astype(int)
 
-import matplotlib.colors as mcolors
-
-summary_types = sorted(df["summary_norm"].unique())
-cmap = cm.get_cmap("Set2", len(summary_types))  # nebo "tab10", "Paired", "Accent"
-
-color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
-
 # --- 1. Koláčový graf ---
-# time_per_lesson = df.groupby("summary_norm")["doba_per_category"].sum()
-# fig1, ax1 = plt.subplots(figsize=(4, 4))
-# time_per_lesson.plot(kind="pie", autopct="%1.1f%%", ax=ax1)
-# ax1.set_title("Podíl času podle typu lekce")
-# ax1.set_ylabel("")
-
+time_per_lesson = df.groupby("summary_norm")["doba_per_category"].sum()
 fig1, ax1 = plt.subplots(figsize=(4, 4))
-colors1 = [color_map[typ] for typ in time_per_lesson.index]
-time_per_lesson.plot(kind="pie", autopct="%1.1f%%", ax=ax1, colors=colors1)
+time_per_lesson.plot(kind="pie", autopct="%1.1f%%", ax=ax1)
 ax1.set_title("Podíl času podle typu lekce")
 ax1.set_ylabel("")
 
-
 # --- 2. Počet typů lekcí ---
-# fig2, ax2 = plt.subplots(figsize=(4, 4))
-# df["summary_norm"].value_counts().plot(kind="bar", ax=ax2)
-# ax2.set_title("Počet typů lekcí")
-# ax2.set_xlabel("Typ")
-# ax2.set_ylabel("Počet")
-
 fig2, ax2 = plt.subplots(figsize=(4, 4))
-lesson_counts = df["summary_norm"].value_counts().reindex(summary_types)
-colors2 = [color_map[typ] for typ in lesson_counts.index]
-lesson_counts.plot(kind="bar", ax=ax2, color=colors2)
+df["summary_norm"].value_counts().plot(kind="bar", ax=ax2)
 ax2.set_title("Počet typů lekcí")
 ax2.set_xlabel("Typ")
 ax2.set_ylabel("Počet")
 
-
 # --- 3. Celkový čas podle typu ---
-# fig3, ax3 = plt.subplots(figsize=(4, 4))
-# df.groupby("summary_norm")["doba_per_category"].sum().plot(kind="bar", ax=ax3)
-# ax3.set_title("Celkový čas podle typu")
-# ax3.set_xlabel("Typ")
-# ax3.set_ylabel("Minuty")
-
 fig3, ax3 = plt.subplots(figsize=(4, 4))
-time_by_type = df.groupby("summary_norm")["doba_per_category"].sum().reindex(summary_types)
-colors3 = [color_map[typ] for typ in time_by_type.index]
-time_by_type.plot(kind="bar", ax=ax3, color=colors3)
+df.groupby("summary_norm")["doba_per_category"].sum().plot(kind="bar", ax=ax3)
 ax3.set_title("Celkový čas podle typu")
 ax3.set_xlabel("Typ")
 ax3.set_ylabel("Minuty")
-
 
 # --- 4. Čas po týdnech s barvami ---
 # all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
@@ -80,10 +48,6 @@ ax3.set_ylabel("Minuty")
 # ax4.set_xticks(x)
 # ax4.set_xticklabels(all_weeks, rotation=90)
 
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-import numpy as np
-
 # --- Přehled týdnů ---
 all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
 
@@ -91,42 +55,33 @@ all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
 weekly_summary = df.groupby(["week", "summary_norm"])["doba_per_category"].sum().unstack(fill_value=0)
 weekly_summary = weekly_summary.reindex(all_weeks, fill_value=0)
 
-# --- Barevná mapa pro typy lekcí ---
-summary_types = sorted(df["summary_norm"].unique())  # stabilní pořadí
-cmap = cm.get_cmap("Set2", len(summary_types))       # pastelová paleta
-color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
+# --- Barvy pro typy lekcí ---
+summary_types = weekly_summary.columns
+colors = cm.get_cmap("Set2", len(summary_types)).colors  # např. pastelové barvy
 
 # --- Vykreslení stacked bar chart ---
 fig4, ax4 = plt.subplots(figsize=(6, 4))
 x = np.arange(len(all_weeks))
 bottom = np.zeros(len(all_weeks))
 
-for typ in summary_types:
-    ax4.bar(
-        x,
-        weekly_summary[typ].values,
-        bottom=bottom,
-        label=typ,
-        color=color_map[typ]
-    )
-    bottom += weekly_summary[typ].values
+for i, col in enumerate(summary_types):
+    ax4.bar(x, weekly_summary[col].values, bottom=bottom, label=col, color=colors[i])
+    bottom += weekly_summary[col].values
 
-# --- Osy a legenda ---
-ax4.set_title("Čas cvičení po týdnech podle typu lekce")
+# ax4.set_title("Čas cvičení po týdnech podle typu lekce")
 ax4.set_xlabel("Týden")
 ax4.set_ylabel("Minuty")
 ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
 ax4.legend(
     title="Typ lekce",
-    loc="upper center",
-    bbox_to_anchor=(0.5, 1.15),
-    ncol=len(summary_types),
-    frameon=False,
-    fontsize="small",
-    title_fontsize="medium"
+    loc="upper center",             # zarovnání na střed
+    bbox_to_anchor=(0.5, 1.15),     # posun nad graf
+    ncol=len(summary_types),        # legenda v jednom řádku
+    frameon=False,                  # bez rámečku (volitelné)
+    fontsize="small",               # menší písmo (volitelné)
+    title_fontsize="medium"         # velikost nadpisu legendy
 )
-
 
 
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
