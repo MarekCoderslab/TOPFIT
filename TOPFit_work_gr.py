@@ -133,6 +133,22 @@ df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
 # Převod datumu na měsíc
 df_exploded["month"] = pd.to_datetime(df_exploded["date"]).dt.to_period("M")
 
+# Převedení barev na hex (pro HTML)
+def rgba_to_hex(rgba):
+    return mcolors.to_hex(rgba)
+
+# Upravené názvy sloupců s barvou
+colored_columns = {
+    col: f"<span style='color:{rgba_to_hex(color_map[col])}'>{col}</span>"
+    for col in weekly_summary.columns
+}
+
+# Přejmenování sloupců v kopii tabulky
+pivot_colored = weekly_summary.rename(columns=colored_columns)
+
+# Vygenerování HTML
+html_table = pivot_colored.to_html(escape=False, classes="centered-table")
+
 # Pivotní tabulka: součet energie podle měsíce a summary_norm
 energy_pivot = pd.pivot_table(
     df_exploded,
