@@ -77,9 +77,9 @@ ax4.legend(title="Typ lekce", bbox_to_anchor=(1.05, 1), loc="upper left")
 
 
 for i in range(4):
-    with cols[i]:
+    with col[i]:
         st.markdown("<div style='display: flex; align-items: center; justify-content: center; height: 100%;'>", unsafe_allow_html=True)
-        st.pyplot(figs[i])
+        st.pyplot(fig[i])
         st.markdown("</div>", unsafe_allow_html=True)
 
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
