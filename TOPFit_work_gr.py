@@ -112,7 +112,7 @@ for typ in summary_types:
     bottom += weekly_summary[typ].values
 
 # --- Osy a legenda ---
-ax4.set_title("Čas cvičení po týdnech podle typu lekce")
+# ax4.set_title("Čas cvičení po týdnech podle typu lekce")
 ax4.set_xlabel("Týden")
 ax4.set_ylabel("Minuty")
 ax4.set_xticks(x)
