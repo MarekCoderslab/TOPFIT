@@ -83,6 +83,13 @@ energy_pivot_rounded = energy_pivot.round(0)
 energy_pivot_clean = energy_pivot_rounded.map(
     lambda x: "" if pd.isna(x) else str(int(x))
 )
+energy_pivot_sorted = energy_pivot_clean.sort_index(ascending=True)
 
+styled_pivot = energy_pivot_sorted.style.set_properties(**{
+    "text-align": "center"
+}).set_table_styles([{
+    "selector": "th",
+    "props": [("text-align", "center")]
+}])
 st.subheader("Pivotní tabulka: čas cvičení podle týdne a typu")
-st.dataframe(energy_pivot_clean)
+st.dataframe(styled_pivot)
