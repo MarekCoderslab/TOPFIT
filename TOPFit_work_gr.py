@@ -75,10 +75,12 @@ ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
 ax4.legend(
     title="Typ lekce",
-    loc="upper center",
-    bbox_to_anchor=(0.5, 1.15),  # střed nad grafem
-    ncol=len(summary_types),     # počet sloupců = počet typů lekcí
-    frameon=False                # volitelně: bez rámečku
+    loc="upper center",             # zarovnání na střed
+    bbox_to_anchor=(0.5, 1.15),     # posun nad graf
+    ncol=len(summary_types),        # legenda v jednom řádku
+    frameon=False,                  # bez rámečku (volitelné)
+    fontsize="small",               # menší písmo (volitelné)
+    title_fontsize="medium"         # velikost nadpisu legendy
 )
 
 
