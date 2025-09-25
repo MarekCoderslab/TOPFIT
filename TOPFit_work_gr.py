@@ -19,7 +19,7 @@ cmap = cm.get_cmap("Set2", len(summary_types))  # nebo "tab10", "Paired", "Accen
 color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
 
 # --- 1. Koláčový graf ---
-# time_per_lesson = df.groupby("summary_norm")["doba_per_category"].sum()
+time_per_lesson = df.groupby("summary_norm")["doba_per_category"].sum()
 # fig1, ax1 = plt.subplots(figsize=(4, 4))
 # time_per_lesson.plot(kind="pie", autopct="%1.1f%%", ax=ax1)
 # ax1.set_title("Podíl času podle typu lekce")
