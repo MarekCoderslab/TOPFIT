@@ -58,3 +58,31 @@ for i in range(4):
         st.pyplot(figs[i])
         st.markdown("</div>", unsafe_allow_html=True)
 
+
+# Převod datumu na měsíc
+df_exploded["month"] = pd.to_datetime(df_exploded["date"]).dt.to_period("M")
+
+# Pivotní tabulka: součet energie podle měsíce a summary_norm
+energy_pivot = pd.pivot_table(
+    df_exploded,
+    index="date",
+    columns="summary_norm",
+    values="energy_per_category",
+    aggfunc="sum",
+    # fill_value=0
+)
+
+# Nahrazení NaN prázdným řetězcem
+
+energy_pivot_clean = energy_pivot.replace({pd.NA: "", None: "", float("nan"): ""})
+# energy_pivot_rounded = energy_pivot.round(0).astype("Int64")
+
+energy_pivot_rounded = energy_pivot.round(0)
+
+# Převedeme na string, zaokrouhlíme, a nahradíme NaN prázdným řetězcem
+energy_pivot_clean = energy_pivot_rounded.map(
+    lambda x: "" if pd.isna(x) else str(int(x))
+)
+
+st.subheader("Pivotní tabulka: čas cvičení podle týdne a typu")
+st.dataframe(energy_pivot_clean)
