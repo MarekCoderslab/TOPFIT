@@ -65,7 +65,7 @@ df_exploded["month"] = pd.to_datetime(df_exploded["date"]).dt.to_period("M")
 # Pivotní tabulka: součet energie podle měsíce a summary_norm
 energy_pivot = pd.pivot_table(
     df_exploded,
-    index="date",
+    index=("date", "week"),
     columns="summary_norm",
     values="energy_per_category",
     aggfunc="sum",
