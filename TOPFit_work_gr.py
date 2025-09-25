@@ -76,12 +76,6 @@ ax4.set_xticklabels(all_weeks, rotation=90)
 ax4.legend(title="Typ lekce", bbox_to_anchor=(1.05, 1), loc="upper left")
 
 
-for i in range(4):
-    with col[i]:
-        st.markdown("<div style='display: flex; align-items: center; justify-content: center; height: 100%;'>", unsafe_allow_html=True)
-        st.pyplot(fig[i])
-        st.markdown("</div>", unsafe_allow_html=True)
-
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
 # Převod datumu na měsíc
 df_exploded["month"] = pd.to_datetime(df_exploded["date"]).dt.to_period("M")
