@@ -68,7 +68,7 @@ for i, col in enumerate(summary_types):
     ax4.bar(x, weekly_summary[col].values, bottom=bottom, label=col, color=colors[i])
     bottom += weekly_summary[col].values
 
-ax4.set_title("Čas cvičení po týdnech podle typu lekce")
+# ax4.set_title("Čas cvičení po týdnech podle typu lekce")
 ax4.set_xlabel("Týden")
 ax4.set_ylabel("Minuty")
 ax4.set_xticks(x)
