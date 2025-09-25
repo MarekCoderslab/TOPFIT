@@ -85,11 +85,26 @@ energy_pivot_clean = energy_pivot_rounded.map(
 )
 energy_pivot_sorted = energy_pivot_clean.sort_index(ascending=False)
 
-styled_pivot = energy_pivot_sorted.style.set_properties(**{
-    "text-align": "center"
-}).set_table_styles([{
-    "selector": "th",
-    "props": [("text-align", "center")]
-}])
-st.subheader("Pivotní tabulka: čas cvičení podle týdne a typu")
-st.dataframe(styled_pivot)
+# Vygenerování HTML s centrovanými buňkami
+html_table = energy_pivot_sorted.to_html(classes="centered-table", escape=False, index=True)
+
+css = """
+<style>
+.centered-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+.centered-table th, .centered-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+.centered-table th {
+    background-color: #f2f2f2;
+}
+</style>
+"""
+
+st.subheader("Pivotní tabulka: čas cvičení podle dnea druhu cvičení")
+st.markdown(css + html_table, unsafe_allow_html=True)
