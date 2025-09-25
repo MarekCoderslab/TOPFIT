@@ -58,7 +58,7 @@ for i in range(4):
         st.pyplot(figs[i])
         st.markdown("</div>", unsafe_allow_html=True)
 
-
+df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
 # Převod datumu na měsíc
 df_exploded["month"] = pd.to_datetime(df_exploded["date"]).dt.to_period("M")
 
