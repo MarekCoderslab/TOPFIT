@@ -83,7 +83,7 @@ energy_pivot_rounded = energy_pivot.round(0)
 energy_pivot_clean = energy_pivot_rounded.map(
     lambda x: "" if pd.isna(x) else str(int(x))
 )
-energy_pivot_sorted = energy_pivot_clean.sort_index(ascending=True)
+energy_pivot_sorted = energy_pivot_clean.sort_index(ascending=False)
 
 styled_pivot = energy_pivot_sorted.style.set_properties(**{
     "text-align": "center"
