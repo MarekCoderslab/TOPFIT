@@ -129,52 +129,42 @@ ax4.legend(
 
 
 
+# --- Načtení dat ---
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
-# Převod datumu na měsíc
-df_exploded["month"] = pd.to_datetime(df_exploded["date"]).dt.to_period("M")
+df_exploded["date"] = pd.to_datetime(df_exploded["date"])
+df_exploded["week"] = df_exploded["date"].dt.isocalendar().week.astype(int)
 
-# Převedení barev na hex (pro HTML)
+# --- Barevná mapa pro typy lekcí ---
+summary_types = sorted(df_exploded["summary_norm"].unique())
+cmap = cm.get_cmap("Set2", len(summary_types))
+color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
+
 def rgba_to_hex(rgba):
     return mcolors.to_hex(rgba)
 
-# Upravené názvy sloupců s barvou
 colored_columns = {
     col: f"<span style='color:{rgba_to_hex(color_map[col])}'>{col}</span>"
-    for col in weekly_summary.columns
+    for col in summary_types
 }
 
-# Přejmenování sloupců v kopii tabulky
-pivot_colored = weekly_summary.rename(columns=colored_columns)
-
-# Vygenerování HTML
-html_table = pivot_colored.to_html(escape=False, classes="centered-table")
-
-# Pivotní tabulka: součet energie podle měsíce a summary_norm
+# --- Pivotní tabulka: součet energie podle data a typu lekce ---
 energy_pivot = pd.pivot_table(
     df_exploded,
-    index=("date", "week"),
+    index=["date", "week"],
     columns="summary_norm",
     values="energy_per_category",
-    aggfunc="sum",
-    # fill_value=0
+    aggfunc="sum"
 )
 
-# Nahrazení NaN prázdným řetězcem
-
-energy_pivot_clean = energy_pivot.replace({pd.NA: "", None: "", float("nan"): ""})
-# energy_pivot_rounded = energy_pivot.round(0).astype("Int64")
-
+# --- Zaokrouhlení a čištění ---
 energy_pivot_rounded = energy_pivot.round(0)
-
-# Převedeme na string, zaokrouhlíme, a nahradíme NaN prázdným řetězcem
-energy_pivot_clean = energy_pivot_rounded.map(
-    lambda x: "" if pd.isna(x) else str(int(x))
-)
+energy_pivot_clean = energy_pivot_rounded.map(lambda x: "" if pd.isna(x) else str(int(x)))
 energy_pivot_sorted = energy_pivot_clean.sort_index(ascending=False)
 
-# Vygenerování HTML s centrovanými buňkami
-html_table = energy_pivot_sorted.to_html(classes="centered-table", escape=False, index=True)
+# --- Přejmenování sloupců podle barevné mapy ---
+pivot_colored = energy_pivot_sorted.rename(columns=colored_columns)
 
+# --- CSS pro centrovanou tabulku ---
 css = """
 <style>
 .centered-table {
@@ -212,7 +202,8 @@ col4, col5 = st.columns([1, 1])  # můžeš upravit poměr např. [1.2, 1] podle
 
 with col4:
     st.subheader("Pivotní tabulka: čas cvičení podle dnea druhu cvičení")
-    st.markdown(css + html_table, unsafe_allow_html=True)
+    html_table = pivot_colored.to_html(classes="centered-table", escape=False, index=True)
+    st.markdown(css + html_table, unsafe_allow_html=True)    
 
 with col5:
     st.subheader("Čas cvičení po týdnech podle typu lekce")
