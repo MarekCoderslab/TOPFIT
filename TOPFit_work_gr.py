@@ -33,20 +33,48 @@ ax3.set_xlabel("Typ")
 ax3.set_ylabel("Minuty")
 
 # --- 4. Čas po týdnech s barvami ---
-all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
-weekly_minutes = df.groupby("week")["doba_per_category"].sum().reindex(all_weeks, fill_value=0)
-weekly_counts = df.groupby("week").size().reindex(all_weeks, fill_value=0)
-norm = plt.Normalize(weekly_counts.min(), weekly_counts.max())
-colors = cm.coolwarm(norm(weekly_counts.values))
+# all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
+# weekly_minutes = df.groupby("week")["doba_per_category"].sum().reindex(all_weeks, fill_value=0)
+# weekly_counts = df.groupby("week").size().reindex(all_weeks, fill_value=0)
+# norm = plt.Normalize(weekly_counts.min(), weekly_counts.max())
+# colors = cm.coolwarm(norm(weekly_counts.values))
 
-fig4, ax4 = plt.subplots(figsize=(4, 4))
+# fig4, ax4 = plt.subplots(figsize=(4, 4))
+# x = np.arange(len(all_weeks))
+# bars = ax4.bar(x, weekly_minutes.values, color=colors)
+# ax4.set_title("Čas cvičení po týdnech")
+# ax4.set_xlabel("Týden")
+# ax4.set_ylabel("Minuty")
+# ax4.set_xticks(x)
+# ax4.set_xticklabels(all_weeks, rotation=90)
+
+# --- Přehled týdnů ---
+all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
+
+# --- Agregace: týden × typ lekce ---
+weekly_summary = df.groupby(["week", "summary_norm"])["doba_per_category"].sum().unstack(fill_value=0)
+weekly_summary = weekly_summary.reindex(all_weeks, fill_value=0)
+
+# --- Barvy pro typy lekcí ---
+summary_types = weekly_summary.columns
+colors = cm.get_cmap("Set2", len(summary_types)).colors  # např. pastelové barvy
+
+# --- Vykreslení stacked bar chart ---
+fig4, ax4 = plt.subplots(figsize=(6, 4))
 x = np.arange(len(all_weeks))
-bars = ax4.bar(x, weekly_minutes.values, color=colors)
-ax4.set_title("Čas cvičení po týdnech")
+bottom = np.zeros(len(all_weeks))
+
+for i, col in enumerate(summary_types):
+    ax4.bar(x, weekly_summary[col].values, bottom=bottom, label=col, color=colors[i])
+    bottom += weekly_summary[col].values
+
+ax4.set_title("Čas cvičení po týdnech podle typu lekce")
 ax4.set_xlabel("Týden")
 ax4.set_ylabel("Minuty")
 ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
+ax4.legend(title="Typ lekce", bbox_to_anchor=(1.05, 1), loc="upper left")
+
 
 # --- Layout: 4 sloupce vedle sebe ---
 cols = st.columns(4)
