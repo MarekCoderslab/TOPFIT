@@ -76,10 +76,6 @@ ax4.set_xticklabels(all_weeks, rotation=90)
 ax4.legend(title="Typ lekce", bbox_to_anchor=(1.05, 1), loc="upper left")
 
 
-# --- Layout: 4 sloupce vedle sebe ---
-cols = st.columns(4)
-figs = [fig1, fig2, fig3, fig4]
-
 for i in range(4):
     with cols[i]:
         st.markdown("<div style='display: flex; align-items: center; justify-content: center; height: 100%;'>", unsafe_allow_html=True)
@@ -134,5 +130,27 @@ css = """
 </style>
 """
 
-st.subheader("Pivotní tabulka: čas cvičení podle dnea druhu cvičení")
-st.markdown(css + html_table, unsafe_allow_html=True)
+
+
+# --- Layout: 4 sloupce vedle sebe ---
+cols = st.columns(4)
+figs = [fig1, fig2, fig3, fig4]
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.pyplot(fig1)
+with col2:
+    st.pyplot(fig2)
+with col3:
+    st.pyplot(fig3)
+
+col4, col5 = st.columns([1, 1])  # můžeš upravit poměr např. [1.2, 1] podle šířky tabulky
+
+with col4:
+    st.subheader("Pivotní tabulka: čas cvičení podle dnea druhu cvičení")
+    st.markdown(css + html_table, unsafe_allow_html=True)
+
+with col5:
+    st.subheader("Čas cvičení po týdnech podle typu lekce")
+    st.pyplot(fig4)
