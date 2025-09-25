@@ -73,7 +73,13 @@ ax4.set_xlabel("Týden")
 ax4.set_ylabel("Minuty")
 ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
-ax4.legend(title="Typ lekce", bbox_to_anchor=(1.05, 1), loc="upper center")
+ax4.legend(
+    title="Typ lekce",
+    loc="upper center",
+    bbox_to_anchor=(0.5, 1.15),  # střed nad grafem
+    ncol=len(summary_types),     # počet sloupců = počet typů lekcí
+    frameon=False                # volitelně: bez rámečku
+)
 
 
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
