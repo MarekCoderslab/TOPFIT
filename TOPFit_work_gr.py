@@ -158,7 +158,9 @@ energy_pivot = pd.pivot_table(
 
 # --- Zaokrouhlení a čištění ---
 energy_pivot_rounded = energy_pivot.round(0)
-energy_pivot_clean = energy_pivot_rounded.map(lambda x: "" if pd.isna(x) else str(int(x)))
+energy_pivot_clean = energy_pivot_rounded.map(
+    lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
+)
 energy_pivot_sorted = energy_pivot_clean.sort_index(ascending=False)
 
 # --- Přejmenování sloupců podle barevné mapy ---
@@ -201,7 +203,7 @@ with col3:
 col4, col5 = st.columns([1, 1])  # můžeš upravit poměr např. [1.2, 1] podle šířky tabulky
 
 with col4:
-    st.subheader("Pivotní tabulka: čas cvičení podle dnea druhu cvičení")
+    st.subheader("Pivotní tabulka: čas cvičení podle dne a druhu cvičení")
     html_table = pivot_colored.to_html(classes="centered-table", escape=False, index=True)
     st.markdown(css + html_table, unsafe_allow_html=True)    
 
