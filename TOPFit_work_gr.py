@@ -88,7 +88,7 @@ import numpy as np
 all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
 
 # --- Agregace: týden × typ lekce ---
-weekly_summary = df.groupby(["week", "summary_norm"])["doba_per_category"].sum().unstack(fill_value=0)
+weekly_summary = df.groupby(["week", "summary_norm"])["energy_per_category"].sum().unstack(fill_value=0)
 weekly_summary = weekly_summary.reindex(all_weeks, fill_value=0)
 
 # --- Barevná mapa pro typy lekcí ---
