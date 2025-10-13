@@ -114,7 +114,7 @@ for typ in summary_types:
 # --- Osy a legenda ---
 # ax4.set_title("Čas cvičení po týdnech podle typu lekce")
 ax4.set_xlabel("Týden")
-ax4.set_ylabel("Minuty")
+ax4.set_ylabel("Energy")
 ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
 ax4.legend(
@@ -208,5 +208,5 @@ with col4:
     st.markdown(css + html_table, unsafe_allow_html=True)    
 
 with col5:
-    st.subheader("Čas cvičení po týdnech podle typu lekce")
+    st.subheader("Energie cvičení po týdnech podle typu lekce")
     st.pyplot(fig4)
