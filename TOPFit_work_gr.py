@@ -114,7 +114,7 @@ for typ in summary_types:
 # --- Osy a legenda ---
 # ax4.set_title("Čas cvičení po týdnech podle typu lekce")
 ax4.set_xlabel("Týden")
-ax4.set_ylabel("Energy")
+ax4.set_ylabel("Energie [kCal]")
 ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
 ax4.legend(
