@@ -1,6 +1,8 @@
 ﻿date,summary,note,month,week,summary_norm,doba_per_category,energy_per_category
 2025-11-14,Doma: Bricho,,11,46,BRICHO,30.0,136.0
-2025-11-11,nohy,,11,46,NOHY,67.0,361.0
+2025-11-13,ZRT,,11,46,ZRT,50.0,286.0
+2025-11-11,"nohy, břicho",,11,46,NOHY,33.5,180.5
+2025-11-11,"nohy, břicho",,11,46,BRICHO,33.5,180.5
 2025-11-06,"PB, břicho",,11,45,PB,43.5,234.0
 2025-11-06,"PB, břicho",,11,45,BRICHO,43.5,234.0
 2025-11-03,"ZRT, břicho",,11,45,ZRT,42.5,246.5
