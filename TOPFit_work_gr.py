@@ -131,8 +131,15 @@ ax4.legend(
 
 # --- Načtení dat ---
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
-df_exploded["date"] = pd.to_datetime(df_exploded["date"])
-df_exploded["week"] = df_exploded["date"].dt.isocalendar().week.astype(int)
+# df_exploded["date"] = pd.to_datetime(df_exploded["date"])
+# df_exploded["week"] = df_exploded["date"].dt.isocalendar().week.astype(int)
+iso = pd.to_datetime(df_exploded["date"]).dt.isocalendar()
+df_exploded["week"] = (
+    iso.year.astype(str) + "-" + iso.week.astype(str).str.zfill(2)
+)
+# doplněny 2 řádky
+df_exploded["week"] = df_exploded["week"].astype(str) 
+all_weeks = sorted(df_exploded["week"].unique())
 
 # --- Barevná mapa pro typy lekcí ---
 summary_types = sorted(df_exploded["summary_norm"].unique())
