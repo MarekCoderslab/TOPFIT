@@ -95,7 +95,7 @@ iso = df_exploded["date"].dt.isocalendar()
 df_exploded["week"] = (
     iso.year.astype(str) + "-" + iso.week.astype(str).str.zfill(2)
 )
-df_exploded["date_fmt"] = df_exploded["date"].dt.strftime("%d.%m.%yyyy")
+df_exploded["date_fmt"] = df_exploded["date"].dt.strftime("%d.%m.%y")
 df_exploded["week_number"] = df_exploded["date"].dt.isocalendar().week
 
 # --- Seznam týdnů v chronologickém pořadí ---
