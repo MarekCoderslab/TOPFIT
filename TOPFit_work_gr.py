@@ -146,6 +146,17 @@ energy_daily = (
     .sort_index(ascending=False)   # obrácené pořadí (nejnovější nahoře)
 )
 
+# --- Přidání sloupce WEEK hned vedle DATE ---
+# získáme unikátní dvojice date–week
+date_week_map = df_exploded[["date", "week"]].drop_duplicates()
+
+# připojíme sloupec week k pivotu
+energy_daily = energy_daily.merge(date_week_map, on="date", how="left")
+
+# přesuneme sloupec week hned za date
+cols = ["date", "week"] + [c for c in energy_daily.columns if c not in ["date", "week"]]
+energy_daily = energy_daily[cols]
+
 # --- Zaokrouhlení a čištění ---
 energy_daily_rounded = energy_daily.round(0)
 energy_daily_clean = energy_daily_rounded.map(
@@ -155,12 +166,13 @@ energy_daily_clean = energy_daily_rounded.map(
 # --- Barevné názvy sloupců (stejné jako pivot_colored) ---
 pivot_colored_2 = energy_daily_clean.rename(columns=colored_columns)
 
+
 # --- HTML tabulka (např. pro Streamlit) ---
-html_table = pivot_colored.to_html(
-    classes="centered-table",
-    escape=False,
-    index=True
-)
+# html_table = pivot_colored.to_html(
+#     classes="centered-table",
+#     escape=False,
+#     index=True
+# )
 
 # --- Vykreslení stacked bar chart ---
 fig4, ax4 = plt.subplots(figsize=(10, 6))
