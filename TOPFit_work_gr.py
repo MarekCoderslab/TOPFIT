@@ -134,6 +134,27 @@ energy_weekly_clean = energy_weekly_rounded.map(
 energy_weekly_sorted = energy_weekly_clean.sort_index()
 pivot_colored = energy_weekly_sorted.rename(columns=colored_columns)
 
+# --- Denní pivot: součet energie podle dne a typu lekce ---
+energy_daily = (
+    pd.pivot_table(
+        df_exploded,
+        index="date",
+        columns="summary_norm",
+        values="energy_per_category",
+        aggfunc="sum"
+    )
+    .sort_index(ascending=False)   # obrácené pořadí (nejnovější nahoře)
+)
+
+# --- Zaokrouhlení a čištění ---
+energy_daily_rounded = energy_daily.round(0)
+energy_daily_clean = energy_daily_rounded.map(
+    lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
+)
+
+# --- Barevné názvy sloupců (stejné jako pivot_colored) ---
+pivot_colored_2 = energy_daily_clean.rename(columns=colored_columns)
+
 # --- HTML tabulka (např. pro Streamlit) ---
 html_table = pivot_colored.to_html(
     classes="centered-table",
@@ -218,10 +239,14 @@ with col3:
     st.pyplot(fig3)
 
 
-# --- 3) Třetí řádek: pivotní tabulka jako poslední ---
+# --- 3) Třetí řádek: denní pivotní tabulka (pivot_colored_2) ---
 col5 = st.columns(1)[0]
 
 with col5:
-    st.subheader("Pivotní tabulka: čas cvičení podle dne a druhu cvičení")
-    html_table = pivot_colored.to_html(classes="centered-table", escape=False, index=True)
-    st.markdown(css + html_table, unsafe_allow_html=True)
+    st.subheader("Denní pivotní tabulka: energie podle dne a typu lekce")
+    html_table_2 = pivot_colored_2.to_html(
+        classes="centered-table",
+        escape=False,
+        index=True
+    )
+    st.markdown(css + html_table_2, unsafe_allow_html=True)
