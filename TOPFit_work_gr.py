@@ -163,7 +163,8 @@ html_table = pivot_colored.to_html(
 )
 
 # --- Vykreslení stacked bar chart ---
-fig4, ax4 = plt.subplots(figsize=(10, 8))
+fig4, ax4 = plt.subplots(figsize=(10, 6))
+ax4.set_ylim(0, energy_weekly.sum(axis=1).max() * 1.2)
 
 x = np.arange(len(all_weeks))
 bottom = np.zeros(len(all_weeks))
@@ -183,6 +184,7 @@ ax4.set_xlabel("Týden")
 ax4.set_ylabel("Energie [kcal]")
 ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
+
 
 ax4.legend(
     title="Typ lekce",
