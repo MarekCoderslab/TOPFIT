@@ -79,44 +79,66 @@ ax3.set_ylabel("Minuty")
 # ax4.set_ylabel("Minuty")
 # ax4.set_xticks(x)
 # ax4.set_xticklabels(all_weeks, rotation=90)
-
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import matplotlib.colors as mcolors
 import numpy as np
+import pandas as pd
 
-# --- Přehled týdnů ---
-all_weeks = list(range(df["week"].min(), df["week"].max() + 1))
+# --- Načtení dat ---
+df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
 
-# --- Agregace: týden × typ lekce ---
-weekly_summary = df.groupby(["week", "summary_norm"])["energy_per_category"].sum().unstack(fill_value=0)
-weekly_summary = weekly_summary.reindex(all_weeks, fill_value=0)
+# --- ISO týden ve formátu ROK-TÝDEN ---
+iso = pd.to_datetime(df_exploded["date"]).dt.isocalendar()
+df_exploded["week"] = (
+    iso.year.astype(str) + "-" + iso.week.astype(str).str.zfill(2)
+)
 
-# --- Barevná mapa pro typy lekcí ---
-summary_types = sorted(df["summary_norm"].unique())  # stabilní pořadí
-cmap = cm.get_cmap("Set2", len(summary_types))       # pastelová paleta
+# --- Seznam týdnů v chronologickém pořadí ---
+all_weeks = sorted(df_exploded["week"].unique())
+
+# --- Typy lekcí ---
+summary_types = sorted(df_exploded["summary_norm"].unique())
+
+# --- Barevná mapa ---
+cmap = cm.get_cmap("Set2", len(summary_types))
 color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
 
+# --- Týdenní pivot: součet energie podle týdne a typu lekce ---
+energy_weekly = (
+    pd.pivot_table(
+        df_exploded,
+        index="week",
+        columns="summary_norm",
+        values="energy_per_category",
+        aggfunc="sum"
+    )
+    .reindex(all_weeks, fill_value=0)
+)
+
 # --- Vykreslení stacked bar chart ---
-fig4, ax4 = plt.subplots(figsize=(6, 4))
+fig4, ax4 = plt.subplots(figsize=(10, 5))
+
 x = np.arange(len(all_weeks))
 bottom = np.zeros(len(all_weeks))
 
 for typ in summary_types:
+    values = energy_weekly[typ].values
     ax4.bar(
         x,
-        weekly_summary[typ].values,
+        values,
         bottom=bottom,
         label=typ,
         color=color_map[typ]
     )
-    bottom += weekly_summary[typ].values
+    bottom += values
 
 # --- Osy a legenda ---
-# ax4.set_title("Čas cvičení po týdnech podle typu lekce")
 ax4.set_xlabel("Týden")
 ax4.set_ylabel("Energie [kcal]")
 ax4.set_xticks(x)
 ax4.set_xticklabels(all_weeks, rotation=90)
+
 ax4.legend(
     title="Typ lekce",
     loc="upper center",
@@ -127,51 +149,8 @@ ax4.legend(
     title_fontsize="medium"
 )
 
-
-
-# --- Načtení dat ---
-df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
-# df_exploded["date"] = pd.to_datetime(df_exploded["date"])
-# df_exploded["week"] = df_exploded["date"].dt.isocalendar().week.astype(int)
-iso = pd.to_datetime(df_exploded["date"]).dt.isocalendar()
-df_exploded["week"] = (
-    iso.year.astype(str) + "-" + iso.week.astype(str).str.zfill(2)
-)
-# doplněny 2 řádky
-df_exploded["week"] = df_exploded["week"].astype(str) 
-all_weeks = sorted(df_exploded["week"].unique())
-
-# --- Barevná mapa pro typy lekcí ---
-summary_types = sorted(df_exploded["summary_norm"].unique())
-cmap = cm.get_cmap("Set2", len(summary_types))
-color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
-
-def rgba_to_hex(rgba):
-    return mcolors.to_hex(rgba)
-
-colored_columns = {
-    col: f"<span style='color:{rgba_to_hex(color_map[col])}'>{col}</span>"
-    for col in summary_types
-}
-
-# --- Pivotní tabulka: součet energie podle data a typu lekce ---
-energy_pivot = pd.pivot_table(
-    df_exploded,
-    index=["date", "week"],
-    columns="summary_norm",
-    values="energy_per_category",
-    aggfunc="sum"
-)
-
-# --- Zaokrouhlení a čištění ---
-energy_pivot_rounded = energy_pivot.round(0)
-energy_pivot_clean = energy_pivot_rounded.map(
-    lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
-)
-energy_pivot_sorted = energy_pivot_clean.sort_index(ascending=False)
-
-# --- Přejmenování sloupců podle barevné mapy ---
-pivot_colored = energy_pivot_sorted.rename(columns=colored_columns)
+plt.tight_layout()
+plt.show()
 
 # --- CSS pro centrovanou tabulku ---
 css = """
