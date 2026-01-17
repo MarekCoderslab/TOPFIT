@@ -95,6 +95,8 @@ iso = df_exploded["date"].dt.isocalendar()
 df_exploded["week"] = (
     iso.year.astype(str) + "-" + iso.week.astype(str).str.zfill(2)
 )
+df_exploded["date_fmt"] = df_exploded["date"].dt.strftime("%d.%m.%y")
+df_exploded["week_number"] = df_exploded["date"].dt.isocalendar().week
 
 # --- Seznam týdnů v chronologickém pořadí ---
 all_weeks = sorted(df_exploded["week"].unique())
@@ -138,7 +140,7 @@ pivot_colored = energy_weekly_sorted.rename(columns=colored_columns)
 energy_daily = (
     pd.pivot_table(
         df_exploded,
-        index="date",
+        index="date_fmt",
         columns="summary_norm",
         values="energy_per_category",
         aggfunc="sum"
