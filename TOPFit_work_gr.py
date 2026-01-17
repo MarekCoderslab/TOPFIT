@@ -224,7 +224,7 @@ css = """
 col4 = st.columns(1)[0]
 
 with col4:
-    st.subheader("Energie cvičení po týdnech podle typu lekce")
+    # st.subheader("Energie cvičení po týdnech podle typu lekce")
     st.pyplot(fig4)
 
 # --- 2) Samostatný řádek: vysvětlivka PB / ZRT --- 
@@ -245,7 +245,7 @@ with col3:
 col5 = st.columns(1)[0]
 
 with col5:
-    st.subheader("Denní pivotní tabulka: energie podle dne a typu lekce")
+    st.subheader("Energie podle typu lekce")
     html_table_2 = pivot_colored_2.to_html(
         classes="centered-table",
         escape=False,
