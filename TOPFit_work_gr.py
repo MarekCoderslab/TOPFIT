@@ -95,7 +95,7 @@ iso = df_exploded["date"].dt.isocalendar()
 df_exploded["week"] = (
     iso.year.astype(str) + "-" + iso.week.astype(str).str.zfill(2)
 )
-df_exploded["date_fmt"] = df_exploded["date"].dt.strftime("%d.%m.%y")
+df_exploded["date_fmt"] = df_exploded["date"].dt.strftime("%d.%m.%yyyy")
 df_exploded["week_number"] = df_exploded["date"].dt.isocalendar().week
 
 # --- Seznam týdnů v chronologickém pořadí ---
@@ -156,6 +156,12 @@ energy_daily_clean = energy_daily_rounded.map(
 
 # --- Barevné názvy sloupců (stejné jako pivot_colored) ---
 pivot_colored_2 = energy_daily_clean.rename(columns=colored_columns)
+
+pivot_colored_2.insert(
+    1,
+    "Týden",
+    df_exploded.set_index("date_fmt").loc[pivot_colored_2.index, "week_number"]
+)
 
 # --- HTML tabulka (např. pro Streamlit) ---
 html_table = pivot_colored.to_html(
