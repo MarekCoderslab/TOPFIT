@@ -198,10 +198,16 @@ css = """
 
 
 
-# --- Layout: 4 sloupce vedle sebe ---
-cols = st.columns(4)
-figs = [fig1, fig2, fig3, fig4]
 
+# --- 1) První řádek: fig4 samostatně ---
+col4 = st.columns(1)[0]
+
+with col4:
+    st.subheader("Energie cvičení po týdnech podle typu lekce")
+    st.pyplot(fig4)
+
+
+# --- 2) Druhý řádek: tři grafy vedle sebe ---
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -211,13 +217,11 @@ with col2:
 with col3:
     st.pyplot(fig3)
 
-col4, col5 = st.columns([1, 1])  # můžeš upravit poměr např. [1.2, 1] podle šířky tabulky
 
-with col4:
-    st.subheader("Pivotní tabulka: čas cvičení podle dne a druhu cvičení")
-    html_table = pivot_colored.to_html(classes="centered-table", escape=False, index=True)
-    st.markdown(css + html_table, unsafe_allow_html=True)    
+# --- 3) Třetí řádek: pivotní tabulka jako poslední ---
+col5 = st.columns(1)[0]
 
 with col5:
-    st.subheader("Energie cvičení po týdnech podle typu lekce")
-    st.pyplot(fig4)
+    st.subheader("Pivotní tabulka: čas cvičení podle dne a druhu cvičení")
+    html_table = pivot_colored.to_html(classes="centered-table", escape=False, index=True)
+    st.markdown(css + html_table, unsafe_allow_html=True)
