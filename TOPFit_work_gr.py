@@ -157,14 +157,20 @@ energy_daily = energy_daily.merge(date_week_map, on="date", how="left")
 cols = ["date", "week"] + [c for c in energy_daily.columns if c not in ["date", "week"]]
 energy_daily = energy_daily[cols]
 
-# --- Zaokrouhlení a čištění ---
-energy_daily_rounded = energy_daily.round(0)
-energy_daily_clean = energy_daily_rounded.map(
-    lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
-)
+# --- Zaokrouhlení ---
+energy_daily_rounded = energy_daily.copy()
+energy_daily_rounded[summary_types] = energy_daily_rounded[summary_types].round(0)
 
-# --- Barevné názvy sloupců (stejné jako pivot_colored) ---
+# --- Formátování jen energetických sloupců ---
+energy_daily_clean = energy_daily_rounded.copy()
+for col in summary_types:
+    energy_daily_clean[col] = energy_daily_clean[col].map(
+        lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
+    )
+
+# --- Barevné názvy sloupců ---
 pivot_colored_2 = energy_daily_clean.rename(columns=colored_columns)
+
 
 
 # --- HTML tabulka (např. pro Streamlit) ---
