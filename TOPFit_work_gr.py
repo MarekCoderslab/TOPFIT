@@ -6,7 +6,7 @@ import numpy as np
 
 st.set_page_config(layout="wide")
 st.title("Vizualizace posilování")
-st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
+# st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
 
 df = pd.read_csv("topfit_rozdel_cviceni.csv")
 df["week"] = pd.to_datetime(df["date"]).dt.isocalendar().week.astype(int)
@@ -220,15 +220,17 @@ css = """
 
 
 
-# --- 1) První řádek: fig4 samostatně ---
+# --- 1) řádek: fig4 samostatně ---
 col4 = st.columns(1)[0]
 
 with col4:
     st.subheader("Energie cvičení po týdnech podle typu lekce")
     st.pyplot(fig4)
 
+# --- 2) Samostatný řádek: vysvětlivka PB / ZRT --- 
+st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
 
-# --- 2) Druhý řádek: tři grafy vedle sebe ---
+# --- 3) řádek: tři grafy vedle sebe ---
 col1, col2, col3 = st.columns(3)
 
 with col1:
@@ -239,7 +241,7 @@ with col3:
     st.pyplot(fig3)
 
 
-# --- 3) Třetí řádek: denní pivotní tabulka (pivot_colored_2) ---
+# --- 4) řádek: denní pivotní tabulka (pivot_colored_2) ---
 col5 = st.columns(1)[0]
 
 with col5:
