@@ -164,7 +164,7 @@ html_table = pivot_colored.to_html(
 
 # --- Vykreslení stacked bar chart ---
 fig4, ax4 = plt.subplots(figsize=(10, 6))
-ax4.set_ylim(0, energy_weekly.sum(axis=1).max() * 1.2)
+ax4.set_ylim(0, energy_weekly.sum(axis=1).max() * 1.1)
 
 x = np.arange(len(all_weeks))
 bottom = np.zeros(len(all_weeks))
