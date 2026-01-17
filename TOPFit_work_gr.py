@@ -79,17 +79,19 @@ ax3.set_ylabel("Minuty")
 # ax4.set_ylabel("Minuty")
 # ax4.set_xticks(x)
 # ax4.set_xticklabels(all_weeks, rotation=90)
+
+import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import numpy as np
-import pandas as pd
 
 # --- Načtení dat ---
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
 
-# --- ISO týden ve formátu ROK-TÝDEN ---
-iso = pd.to_datetime(df_exploded["date"]).dt.isocalendar()
+# --- Převod data a vytvoření ISO týdne ve formátu ROK-TÝDEN ---
+df_exploded["date"] = pd.to_datetime(df_exploded["date"])
+iso = df_exploded["date"].dt.isocalendar()
 df_exploded["week"] = (
     iso.year.astype(str) + "-" + iso.week.astype(str).str.zfill(2)
 )
@@ -100,9 +102,17 @@ all_weeks = sorted(df_exploded["week"].unique())
 # --- Typy lekcí ---
 summary_types = sorted(df_exploded["summary_norm"].unique())
 
-# --- Barevná mapa ---
+# --- Barevná mapa pro typy lekcí ---
 cmap = cm.get_cmap("Set2", len(summary_types))
 color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
+
+def rgba_to_hex(rgba):
+    return mcolors.to_hex(rgba)
+
+colored_columns = {
+    col: f"<span style='color:{rgba_to_hex(color_map[col])}'>{col}</span>"
+    for col in summary_types
+}
 
 # --- Týdenní pivot: součet energie podle týdne a typu lekce ---
 energy_weekly = (
@@ -114,6 +124,21 @@ energy_weekly = (
         aggfunc="sum"
     )
     .reindex(all_weeks, fill_value=0)
+)
+
+# --- Tabulka pro HTML: zaokrouhlení a přebarvení názvů sloupců ---
+energy_weekly_rounded = energy_weekly.round(0)
+energy_weekly_clean = energy_weekly_rounded.map(
+    lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
+)
+energy_weekly_sorted = energy_weekly_clean.sort_index()
+pivot_colored = energy_weekly_sorted.rename(columns=colored_columns)
+
+# --- HTML tabulka (např. pro Streamlit) ---
+html_table = pivot_colored.to_html(
+    classes="centered-table",
+    escape=False,
+    index=True
 )
 
 # --- Vykreslení stacked bar chart ---
@@ -133,7 +158,6 @@ for typ in summary_types:
     )
     bottom += values
 
-# --- Osy a legenda ---
 ax4.set_xlabel("Týden")
 ax4.set_ylabel("Energie [kcal]")
 ax4.set_xticks(x)
@@ -151,6 +175,7 @@ ax4.legend(
 
 plt.tight_layout()
 plt.show()
+
 
 # --- CSS pro centrovanou tabulku ---
 css = """
