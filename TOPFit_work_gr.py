@@ -6,7 +6,7 @@ import numpy as np
 
 st.set_page_config(layout="wide")
 st.title("Vizualizace posilování")
-st.subheader("PB = partie Prsa, Biceps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ZRT = partie Záda, Ramena, Triceps")
+st.subheader("PB = partie Prsa, Biceps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ZRT = partie Záda, Ramena, Triceps")
 
 df = pd.read_csv("topfit_rozdel_cviceni.csv")
 df["week"] = pd.to_datetime(df["date"]).dt.isocalendar().week.astype(int)
