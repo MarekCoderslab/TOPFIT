@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import numpy as np
+import streamlit as st
+
 
 # --- Načtení dat ---
 df_exploded = pd.read_csv("topfit_rozdel_cviceni.csv")
