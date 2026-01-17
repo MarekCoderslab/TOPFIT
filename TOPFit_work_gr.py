@@ -142,7 +142,7 @@ html_table = pivot_colored.to_html(
 )
 
 # --- Vykreslení stacked bar chart ---
-fig4, ax4 = plt.subplots(figsize=(10, 5))
+fig4, ax4 = plt.subplots(figsize=(10, 8))
 
 x = np.arange(len(all_weeks))
 bottom = np.zeros(len(all_weeks))
