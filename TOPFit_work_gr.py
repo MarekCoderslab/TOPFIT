@@ -6,7 +6,7 @@ import numpy as np
 
 st.set_page_config(layout="wide")
 st.title("Vizualizace posilování")
-# st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
+st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
 
 df = pd.read_csv("topfit_rozdel_cviceni.csv")
 df["week"] = pd.to_datetime(df["date"]).dt.isocalendar().week.astype(int)
@@ -228,7 +228,7 @@ with col4:
     st.pyplot(fig4)
 
 # --- 2) Samostatný řádek: vysvětlivka PB / ZRT --- 
-st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
+# st.subheader("PB = partie Prsa, Biceps, ZRT = partie Záda, Ramena, Triceps")
 
 # --- 3) řádek: tři grafy vedle sebe ---
 col1, col2, col3 = st.columns(3)
