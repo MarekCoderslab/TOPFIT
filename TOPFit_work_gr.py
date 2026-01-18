@@ -113,6 +113,11 @@ for col in summary_types:
         lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
     )
 
+energy_daily_fmt = energy_daily_fmt.rename(columns={
+    "date": "Datum",
+    "year_week": "Týden"
+})
+
 pivot_colored_2 = energy_daily_fmt.rename(columns=colored_columns)
 
 # ------------------------------------------------------------
