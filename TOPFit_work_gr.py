@@ -49,6 +49,7 @@ fig1, ax1 = plt.subplots(figsize=(4, 4))
 colors1 = [color_map[typ] for typ in time_per_lesson.index]
 time_per_lesson.plot(kind="pie", autopct="%1.1f%%", ax=ax1, colors=colors1)
 ax1.set_title("Podíl času podle typu lekce")
+ax1.set_xlabel("")
 ax1.set_ylabel("")
 
 lesson_counts = df["summary_norm"].value_counts().reindex(summary_types)
@@ -56,12 +57,14 @@ fig2, ax2 = plt.subplots(figsize=(4, 4))
 colors2 = [color_map[typ] for typ in lesson_counts.index]
 lesson_counts.plot(kind="bar", ax=ax2, color=colors2)
 ax2.set_title("Počet typů lekcí")
+ax2.set_xlabel("")
 
 time_by_type = df.groupby("summary_norm")["doba_per_category"].sum().reindex(summary_types)
 fig3, ax3 = plt.subplots(figsize=(4, 4))
 colors3 = [color_map[typ] for typ in time_by_type.index]
 time_by_type.plot(kind="bar", ax=ax3, color=colors3)
 ax3.set_title("Celkový čas podle typu")
+ax3.set_xlabel("")
 
 # ------------------------------------------------------------
 # 3) Týdenní pivot – správný, stabilní
