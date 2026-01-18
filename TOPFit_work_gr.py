@@ -25,10 +25,11 @@ df["week"] = df["week"].astype(int)
 df["year_week"] = df["year"].astype(str) + "-" + df["week"].astype(str).str.zfill(2)
 
 # Typy lekcí
-summary_types = ["NOHY", "PB", "ZRT", "BRICHO"]
+summary_types = sorted(df["summary_norm"].unique())
+
 
 # Barvy
-cmap = cm.get_cmap("tab10", len(summary_types))
+cmap = cm.get_cmap("set2", len(summary_types))
 color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
 
 def rgba_to_hex(rgba):
