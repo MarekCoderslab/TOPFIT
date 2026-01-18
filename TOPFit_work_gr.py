@@ -25,7 +25,8 @@ df["week"] = df["week"].astype(int)
 df["year_week"] = df["year"].astype(str) + "-" + df["week"].astype(str).str.zfill(2)
 
 # Typy lekcí
-summary_types = sorted(df["summary_norm"].unique())
+summary_types = ["ZRT", "PB", "NOHY", "BRICHO"]
+
 
 
 # Barvy
