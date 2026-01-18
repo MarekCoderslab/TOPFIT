@@ -118,6 +118,7 @@ energy_daily_fmt = energy_daily_fmt.rename(columns={
     "date": "Datum",
     "year_week": "Týden"
 })
+energy_daily_fmt["date"] = energy_daily_fmt["date"].dt.strftime("%a %d.%m.")
 
 pivot_colored_2 = energy_daily_fmt.rename(columns=colored_columns)
 
