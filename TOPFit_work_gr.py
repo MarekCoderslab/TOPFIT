@@ -25,7 +25,7 @@ df["week"] = df["week"].astype(int)
 df["year_week"] = df["year"].astype(str) + "-" + df["week"].astype(str).str.zfill(2)
 
 # Typy lekcí
-summary_types = ["ZRT", "PB", "NOHY", "BRICHO"]
+summary_types = ["NOHY", "PB", "ZRT", "BRICHO"]
 
 # Barvy
 cmap = cm.get_cmap("tab10", len(summary_types))
