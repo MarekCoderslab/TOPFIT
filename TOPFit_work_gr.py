@@ -78,6 +78,7 @@ energy_weekly = (
     .reindex(all_weeks, fill_value=0)
     .reindex(columns=summary_types, fill_value=0)
 )
+energy_weekly = energy_weekly.fillna(0)
 
 # ------------------------------------------------------------
 # 4) Denní pivot – date + year_week
