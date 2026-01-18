@@ -125,4 +125,50 @@ for typ in summary_types:
     bottom += values
 
 ax4.set_xlabel("Týden")
-ax4.set
+ax4.set_ylabel("Energie [kcal]")
+ax4.set_xticks(x)
+ax4.set_xticklabels(all_weeks, rotation=90)
+
+ax4.legend(
+    title="Typ lekce",
+    loc="upper center",
+    bbox_to_anchor=(0.5, 1.15),
+    ncol=len(summary_types),
+    frameon=False,
+)
+
+plt.tight_layout()
+
+# ------------------------------------------------------------
+# 6) CSS + layout
+# ------------------------------------------------------------
+css = """
+<style>
+.centered-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+.centered-table th, .centered-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+.centered-table th {
+    background-color: #f2f2f2;
+}
+</style>
+"""
+
+# ------------------------------------------------------------
+# 7) Streamlit layout
+# ------------------------------------------------------------
+st.pyplot(fig4)
+
+col1, col2, col3 = st.columns(3)
+col1.pyplot(fig1)
+col2.pyplot(fig2)
+col3.pyplot(fig3)
+
+st.subheader("Denní energie podle typu lekce")
+html_table_2 = pivot_colored_2.to_html(classes="centered-table", escape=False)
+st.markdown(css + html_table_2, unsafe_allow_html=True)
