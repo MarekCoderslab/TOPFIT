@@ -113,6 +113,9 @@ for col in summary_types:
     energy_daily_fmt[col] = energy_daily_fmt[col].map(
         lambda x: "" if pd.isna(x) else f"{int(x)} kcal"
     )
+import locale 
+locale.setlocale(locale.LC_TIME, "cs_CZ.utf8")
+
 energy_daily_fmt["date"] = energy_daily_fmt["date"].dt.strftime("%a %d.%m.")
 
 energy_daily_fmt = energy_daily_fmt.rename(columns={
