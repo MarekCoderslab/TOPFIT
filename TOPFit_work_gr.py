@@ -22,7 +22,8 @@ df["year"] = df["date"].dt.year
 df["week"] = df["week"].astype(int)
 
 # Stabilní klíč pro pivoty
-df["year_week"] = df["year"].astype(str) + "-" + df["week"].astype(str).zfill(2)
+df["year_week"] = df["year"].astype(str) + "-" + df["week"].astype(str).str.zfill(2)
+
 
 # Typy lekcí
 summary_types = sorted(df["summary_norm"].unique())
