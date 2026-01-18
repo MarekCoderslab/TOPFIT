@@ -28,7 +28,7 @@ df["year_week"] = df["year"].astype(str) + "-" + df["week"].astype(str).str.zfil
 summary_types = sorted(df["summary_norm"].unique())
 
 # Barvy
-cmap = cm.get_cmap("Set2", len(summary_types))
+cmap = cm.get_cmap("tab10", len(summary_types))
 color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
 
 def rgba_to_hex(rgba):
