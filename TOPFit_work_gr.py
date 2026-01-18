@@ -121,7 +121,14 @@ bottom = np.zeros(len(all_weeks))
 
 for typ in summary_types:
     values = energy_weekly[typ].values
-    ax4.bar(x, values, bottom=bottom, label=typ, color=color_map[typ])
+    ax4.bar(
+        x, 
+        values, 
+        bottom=bottom, 
+        label=typ, 
+        color=color_map[typ],
+        edgecolor="black",
+        linewidth=0.5)
     bottom += values
 
 ax4.set_xlabel("Týden")
