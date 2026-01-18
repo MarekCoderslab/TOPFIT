@@ -29,7 +29,7 @@ summary_types = sorted(df["summary_norm"].unique())
 
 
 # Barvy
-cmap = cm.get_cmap("set2", len(summary_types))
+cmap = cm.get_cmap("Set2", len(summary_types))
 color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
 
 def rgba_to_hex(rgba):
