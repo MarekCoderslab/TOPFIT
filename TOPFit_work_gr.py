@@ -164,14 +164,16 @@ css = """
 .centered-table {
     width: 100%;
     border-collapse: collapse;
-    text-align: center;
 }
 .centered-table th, .centered-table td {
     border: 1px solid #ddd;
     padding: 8px;
+    text-align: center;      /* ← TADY JE KLÍČ */
+    vertical-align: middle;  /* ← A TADY PRO VERTIKÁLNÍ STŘED */
 }
 .centered-table th {
     background-color: #f2f2f2;
+    font-weight: bold;
 }
 </style>
 """
