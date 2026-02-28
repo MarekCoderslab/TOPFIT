@@ -194,3 +194,10 @@ col3.pyplot(fig3)
 st.subheader("Denní energie podle typu lekce")
 html_table_2 = pivot_colored_2.to_html(classes="centered-table", escape=False)
 st.markdown(css + html_table_2, unsafe_allow_html=True)
+
+st.markdown(
+    "<div style='text-align:center;'>"
+    "<a href='mailto:marek.coderslab@gmail.com'>Created: marek.coderslab@gmail.com</a>"
+    "</div>",
+    unsafe_allow_html=True
+)
