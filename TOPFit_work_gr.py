@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import numpy as np
 
@@ -15,23 +14,20 @@ st.subheader("PB = Prsa/Biceps &nbsp;&nbsp;&nbsp; ZRT = Záda/Ramena/Triceps")
 df = pd.read_csv("topfit_rozdel_cviceni.csv")
 df["date"] = pd.to_datetime(df["date"])
 
-# Rok z data
 df["year"] = df["date"].dt.year
-
-# Týden z CSV (už existuje)
 df["week"] = df["week"].astype(int)
-
-# Stabilní klíč pro pivoty
 df["year_week"] = df["year"].astype(str) + "-" + df["week"].astype(str).str.zfill(2)
 
-# Typy lekcí
 summary_types = ["ZRT", "PB", "NOHY", "BRICHO"]
 
-
-
-# Barvy
-cmap = cm.get_cmap("Set2", len(summary_types))
-color_map = {typ: cmap(i) for i, typ in enumerate(summary_types)}
+# ------------------------------------------------------------
+# 2) Barvy – stabilní pro Intel i M1
+# ------------------------------------------------------------
+# Původní problém: cm.get_cmap() neexistuje na M1
+# Řešení: plt.get_cmap() je stabilní API
+base_cmap = plt.get_cmap("Set2")
+colors = base_cmap(np.linspace(0, 1, len(summary_types)))
+color_map = {typ: colors[i] for i, typ in enumerate(summary_types)}
 
 def rgba_to_hex(rgba):
     return mcolors.to_hex(rgba)
@@ -42,7 +38,7 @@ colored_columns = {
 }
 
 # ------------------------------------------------------------
-# 2) Grafy – koláč, počty, celkový čas
+# 3) Grafy – koláč, počty, celkový čas
 # ------------------------------------------------------------
 time_per_lesson = df.groupby("summary_norm")["doba_per_category"].sum()
 
@@ -68,7 +64,7 @@ ax3.set_title("Celkový čas podle typu")
 ax3.set_xlabel("")
 
 # ------------------------------------------------------------
-# 3) Týdenní pivot – správný, stabilní
+# 4) Týdenní pivot
 # ------------------------------------------------------------
 all_weeks = sorted(df["year_week"].unique())
 
@@ -83,10 +79,11 @@ energy_weekly = (
     .reindex(all_weeks, fill_value=0)
     .reindex(columns=summary_types, fill_value=0)
 )
+
 energy_weekly = energy_weekly.fillna(0)
 
 # ------------------------------------------------------------
-# 4) Denní pivot – date + year_week
+# 5) Denní pivot
 # ------------------------------------------------------------
 energy_daily = (
     pd.pivot_table(
@@ -99,15 +96,12 @@ energy_daily = (
     .sort_index(ascending=False)
 )
 
-# Přidání sloupce year_week
 date_week_map = df[["date", "year_week"]].drop_duplicates()
 energy_daily = energy_daily.merge(date_week_map, on="date", how="left")
 
-# Přesun sloupce
 cols = ["date", "year_week"] + [c for c in energy_daily.columns if c not in ["date", "year_week"]]
 energy_daily = energy_daily[cols]
 
-# Formátování
 energy_daily_fmt = energy_daily.copy()
 for col in summary_types:
     energy_daily_fmt[col] = energy_daily_fmt[col].map(
@@ -124,7 +118,7 @@ energy_daily_fmt = energy_daily_fmt.rename(columns={
 pivot_colored_2 = energy_daily_fmt.rename(columns=colored_columns)
 
 # ------------------------------------------------------------
-# 5) Stacked bar graf – týdenní energie
+# 6) Stacked bar graf – týdenní energie
 # ------------------------------------------------------------
 fig4, ax4 = plt.subplots(figsize=(10, 6))
 ax4.set_ylim(0, energy_weekly.sum(axis=1).max() * 1.1)
@@ -135,13 +129,14 @@ bottom = np.zeros(len(all_weeks))
 for typ in summary_types:
     values = energy_weekly[typ].values
     ax4.bar(
-        x, 
-        values, 
-        bottom=bottom, 
-        label=typ, 
+        x,
+        values,
+        bottom=bottom,
+        label=typ,
         color=color_map[typ],
         edgecolor="black",
-        linewidth=0.5)
+        linewidth=0.5
+    )
     bottom += values
 
 ax4.set_xlabel("Týden")
@@ -160,7 +155,7 @@ ax4.legend(
 plt.tight_layout()
 
 # ------------------------------------------------------------
-# 6) CSS + layout
+# 7) CSS + layout
 # ------------------------------------------------------------
 css = """
 <style>
@@ -171,8 +166,8 @@ css = """
 .centered-table th, .centered-table td {
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: center;      /* ← TADY JE KLÍČ */
-    vertical-align: middle;  /* ← A TADY PRO VERTIKÁLNÍ STŘED */
+    text-align: center;
+    vertical-align: middle;
 }
 .centered-table th {
     background-color: #f2f2f2;
@@ -182,7 +177,7 @@ css = """
 """
 
 # ------------------------------------------------------------
-# 7) Streamlit layout
+# 8) Streamlit layout
 # ------------------------------------------------------------
 st.pyplot(fig4)
 
