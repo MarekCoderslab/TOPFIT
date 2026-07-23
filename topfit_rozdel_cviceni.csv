@@ -1,4 +1,6 @@
-date,summary,note,month,week,summary_norm,doba_per_category,energy_per_category
+﻿date,summary,note,month,week,summary_norm,doba_per_category,energy_per_category
+2026-07-23,"ZRT, břicho",,7,30,ZRT,46.0,260.0
+2026-07-23,"ZRT, břicho",,7,30,BRICHO,46.0,260.0
 2026-07-09,PB,,7,28,PB,86.0,444.0
 2026-06-25,ZRT,,6,26,ZRT,61.0,350.0
 2026-06-11,PB,,6,24,PB,67.0,428.0
